@@ -1,0 +1,15 @@
+FROM maven:3-jdk-8
+ENV LANG C.UTF-8
+
+ARG MVN_ARGS
+
+WORKDIR /src
+COPY    ./src/  /src
+COPY    ./  /src
+
+RUN mvn clean install -U -DskipTests\
+    && rm -f /src/target/*sources.jar \
+    && cp -a /src/target/RestWithService*.jar /app.jar \
+    && chmod +x /src/run-ci.sh
+
+ENTRYPOINT  /src/run-ci.sh
